@@ -1,5 +1,7 @@
 ---
-title: Use custom Docker images in Truss
+title: Use custom Docker images
+sidebar_label: Custom Docker images
+description: Learn to use a custom Docker image in Truss
 ---
 
 By default, Truss uses prebuilt base images from
@@ -13,19 +15,17 @@ there are times when you need to use a **custom Docker image**.
 
 You should consider using a custom Docker image when:
 
-- **You need specific system dependencies** that aren't included in the default images.
-- **You want to use a different base OS** or distribution.
-- **You have preconfigured environments** from other projects.
-- **You need to optimize image size** for specific use cases.
-- **You require specific versions** of system libraries or tools.
+- You need specific system dependencies that aren't included in the default images.
+- You need to optimize image size for specific use cases.
+- You require specific versions of system libraries or tools.
 
 ## Requirements
 
 Your Docker image must meet these requirements:
 
-1. **Debian-based OS** - The image must be Debian or Debian-like.
-2. **Python 3.8 - 3.13** - The image must have a compatible Python version installed.
-3. **Absolute Python path** - If the Python executable isn't in the default location, specify its absolute path.
+- Debian-based OS: The image must be Debian or Debian-like.
+- Python 3.8 - 3.13: The image must have a compatible Python version installed.
+- Absolute Python path: If the Python executable isn't in the default location, specify its absolute path.
 
 ## Customize your Docker image
 
