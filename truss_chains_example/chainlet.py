@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import truss_chains as chains
 
 # Custom Docker image configuration pointing to python:3.11-slim-bookworm.
@@ -6,7 +8,7 @@ IMAGE_CUSTOM = chains.DockerImage(
         image="python:3.11-slim-bookworm",
         python_executable_path="/usr/local/bin/python",
     ),
-    pip_requirements_file=chains.make_abs_path_here("requirements.txt"),
+    pip_requirements_file=str(Path(__file__).resolve().parent / "requirements.txt"),
 )
 
 

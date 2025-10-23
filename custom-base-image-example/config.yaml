@@ -3,7 +3,7 @@ config_version: 1
 model_name: custom-base-image-example
 
 model:
-  model_module: model
+  model_module: model.py
 
 python_config:
   python_version: py38

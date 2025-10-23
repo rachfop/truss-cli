@@ -2,7 +2,7 @@
 
 const config = {
   title: "Use custom docker images in Truss",
-  url: "https://rachfop.github.io",
+  url: "https://truss-cli.vercel.app",
   baseUrl: "/",
   organizationName: "rachfop",
   projectName: "custom-docker-image",
