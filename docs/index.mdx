@@ -23,9 +23,9 @@ You should consider using a custom Docker image when:
 
 Your Docker image must meet these requirements:
 
-1. **Debian-based OS** — The image must be Debian or Debian-like.
-2. **Python 3.8 - 3.13** — The image must have a compatible Python version installed.
-3. **Absolute Python path** — If the Python executable isn't in the default location, specify its absolute path.
+1. **Debian-based OS** - The image must be Debian or Debian-like.
+2. **Python 3.8 - 3.13** - The image must have a compatible Python version installed.
+3. **Absolute Python path** - If the Python executable isn't in the default location, specify its absolute path.
 
 ## Customize your Docker image
 
@@ -236,9 +236,18 @@ This example demonstrates how to use a custom Docker image inside a Chainlet con
 
 ## Conclusion
 
-Custom Docker images in Truss let you set up your own runtime environment for advanced ML use cases.
-Use them to:
+Custom Docker images in Truss unlock flexibility for complex ML workloads. This
+gives you control over your runtime environment; from OS and Python version to
+preinstalled dependencies, ensuring your model behaves exactly as expected in
+production.
 
-- Extend base images with additional dependencies.
-- Match existing infrastructure setups.
-- Integrate with private registries or CI/CD pipelines.
+Use custom images when you need to:
+
+- Extend base images with additional libraries or build tools
+- Match your organization's existing infrastructure
+- Optimize performance or image size for specialized deployments
+
+For most users, start with the default Truss base images and layer customization
+only when you need it. For advanced workflows; like preconfigured AI
+environments or build-time setup, Truss's custom image support is built to help
+you scale.
