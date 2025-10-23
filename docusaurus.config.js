@@ -46,7 +46,26 @@ const config = {
         // Custom separator between documents
         documentSeparator: '\n\n---\n\n',
       }
-    ]
+    ],
+    // Add Vercel Speed Insights
+    function speedInsightsPlugin() {
+      return {
+        name: 'speed-insights-plugin',
+        injectHtmlTags() {
+          return {
+            postBodyTags: [
+              {
+                tagName: 'script',
+                attributes: {
+                  type: 'module',
+                  src: 'https://unpkg.com/@vercel/speed-insights@1.0.0/dist/index.js',
+                },
+              },
+            ],
+          };
+        },
+      };
+    },
   ],
 
   presets: [

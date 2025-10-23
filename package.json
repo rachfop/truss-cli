@@ -13,6 +13,7 @@
     "@docusaurus/core": "^3.4.0",
     "@docusaurus/preset-classic": "^3.4.0",
     "@docusaurus/theme-classic": "^3.4.0",
+    "@vercel/speed-insights": "^1.2.0",
     "clsx": "^1.2.1",
     "prism-react-renderer": "^2.3.1",
     "react": "^18.2.0",
