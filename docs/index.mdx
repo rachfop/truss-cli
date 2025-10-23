@@ -1,0 +1,244 @@
+---
+title: Use custom Docker images in Truss
+---
+
+By default, Truss uses prebuilt base images from
+[`baseten/truss-server-base`](https://hub.docker.com/r/baseten/truss-server-base)
+that are optimized for machine learning (ML) workloads. These images come in different variants for
+Python versions (3.9, 3.10, 3.11) and include GPU support when needed.
+
+The default images are Debian-based and include common dependencies such as
+build tools, Git, and cURL. For most workloads, this is sufficient. However,
+there are times when you need to use a **custom Docker image**.
+
+You should consider using a custom Docker image when:
+
+- **You need specific system dependencies** that aren't included in the default images.
+- **You want to use a different base OS** or distribution.
+- **You have preconfigured environments** from other projects.
+- **You need to optimize image size** for specific use cases.
+- **You require specific versions** of system libraries or tools.
+
+## Requirements
+
+Your Docker image must meet these requirements:
+
+1. **Debian-based OS** — The image must be Debian or Debian-like.
+2. **Python 3.8 - 3.13** — The image must have a compatible Python version installed.
+3. **Absolute Python path** — If the Python executable isn't in the default location, specify its absolute path.
+
+## Customize your Docker image
+
+Truss lets you specify your Docker image in two ways.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="truss-type" defaultValue="standard" values={[
+{label: 'Standard Truss', value: 'standard'},
+{label: 'Truss Chains', value: 'chains'},
+]}>
+
+<TabItem value="standard">
+
+## Standard Truss
+
+In this example, you'll use the NVIDIA NeMo image.
+
+1. Choose your base image
+
+    Select a Docker image from [Docker Hub](https://hub.docker.com/) or your private registry. For example, NVIDIA NeMo:
+
+    ```bash
+    nvcr.io/nvidia/nemo:23.03
+    ```
+
+2. Update `config.yaml`
+
+    Create a `config.yaml` file and add the following code to run the model:
+
+    ```yaml
+    config_version: 1
+
+    model_name: custom-base-image-example
+
+    model:
+      model_module: model.py
+
+    python_config:
+      python_version: py38
+      requirements:
+        - PySoundFile
+
+    base_image:
+      image: nvcr.io/nvidia/nemo:23.03
+      python_executable_path: /usr/bin/python
+
+    resources:
+      accelerator: T4
+      use_gpu: true
+    ```
+
+    For private registries, include authentication credentials:
+
+    ```yaml
+    base_image:
+      image: "your-registry.com/your-image:tag"
+      python_executable_path: "/usr/local/bin/python3"
+      # Private registry authentication
+      docker_auth:
+        username: "your-username"
+        password: "your-password"
+    ```
+
+3. Build and run the model
+
+    Build the Docker image:
+
+    ```bash
+    truss image build . --tag custom-base-image-example:latest
+    ```
+
+    Then run the Truss container locally:
+
+    ```bash
+    truss image run . --tag custom-base-image-example:latest --port 8080
+    ```
+
+    After it starts, your model is available at:
+
+    ```
+    http://localhost:8080/v1/models/custom-base-image-example/predict
+    ```
+
+4. Send a request
+
+    Once the container is running, test your model using `curl` or the Truss CLI.
+
+    Use `curl` to send a request:
+
+    ```bash
+    curl -X POST http://localhost:8080/v1/models/custom-base-image-example:predict \
+      -H 'Content-Type: application/json' \
+      -d '{"inputs": [1, 2, 3]}'
+    ```
+
+    Example response:
+
+    ```json
+    {
+      "predictions": [2, 4, 6]
+    }
+    ```
+
+    Alternatively, you can use the Truss CLI to send a request:
+
+    ```bash
+    truss predict --target-directory . --data '{"inputs": [1, 2, 3]}'
+    ```
+
+</TabItem>
+
+<TabItem value="chains">
+
+## Truss Chains
+
+This example demonstrates how to use a custom Docker image inside a Chainlet configuration.
+
+1. Define your custom image
+
+    Create a Python file called `chainlet.py` and add the following code:
+
+    ```python
+    import truss_chains as chains
+
+    IMAGE_CUSTOM = chains.DockerImage(
+        base_image=chains.CustomImage(
+            image="python:3.11-slim-bookworm",
+            python_executable_path="/usr/local/bin/python",
+        ),
+        pip_requirements_file=chains.make_abs_path_here("requirements.txt"),
+    )
+    ```
+
+2. Apply it to your chainlet
+
+    Then update the `chainlet.py` file to add the following code:
+
+    ```python
+    class MyChainlet(chains.ChainletBase):
+        remote_config = chains.RemoteConfig(docker_image=IMAGE_CUSTOM)
+
+        def run_remote(self, data: str) -> str:
+            return data.upper()
+    ```
+
+3. Run the chainlet
+
+    Install dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    Then execute your chainlet:
+
+    ```bash
+    python chainlet.py
+    ```
+
+    Example output:
+
+    ```
+    HELLO, WORLD!
+    ```
+
+4. Send a request
+
+    After your chainlet is deployed or running locally, invoke it programmatically.
+
+    Run the chainlet locally:
+
+    ```python
+    from chainlet import MyChainlet
+
+    chain = MyChainlet()
+    result = chain.run_remote("hello, world!")
+    print(result)
+    ```
+
+    Output:
+
+    ```
+    HELLO, WORLD!
+    ```
+
+    You can also invoke a deployed chainlet:
+
+    If your chainlet is deployed remotely, use the Truss Chains SDK to send a request:
+
+    ```python
+    import truss_chains as chains
+
+    chain = chains.get_remote_chain("my-chainlet")
+    response = chain.invoke("run_remote", data="hello world")
+    print(response)
+    ```
+
+    Response:
+
+    ```
+    HELLO WORLD
+    ```
+
+</TabItem>
+</Tabs>
+
+## Conclusion
+
+Custom Docker images in Truss let you set up your own runtime environment for advanced ML use cases.
+Use them to:
+
+- Extend base images with additional dependencies.
+- Match existing infrastructure setups.
+- Integrate with private registries or CI/CD pipelines.

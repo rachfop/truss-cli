@@ -1,0 +1,21 @@
+{
+  "id": "main",
+  "title": "Use Custom Docker Images in Truss",
+  "description": "By default, Truss uses pre-built base images from baseten/truss-server-base that are optimized for ML workloads.",
+  "source": "@site/docs/main.mdx",
+  "sourceDirName": ".",
+  "slug": "/main",
+  "permalink": "/main",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Use Custom Docker Images in Truss"
+  },
+  "sidebar": "mainSidebar",
+  "previous": {
+    "title": "Use Custom Docker Images in Truss",
+    "permalink": "/"
+  }
+}

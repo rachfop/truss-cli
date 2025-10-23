@@ -1,0 +1,19 @@
+config_version: 1
+
+model_name: custom-base-image-example
+
+model:
+  model_module: model
+
+python_config:
+  python_version: py38
+  requirements:
+    - PySoundFile
+
+base_image:
+  image: nvcr.io/nvidia/nemo:23.03
+  python_executable_path: /usr/bin/python
+
+resources:
+  accelerator: T4
+  use_gpu: true

@@ -1,0 +1,31 @@
+{
+  "version": {
+    "pluginId": "default",
+    "version": "current",
+    "label": "Next",
+    "banner": null,
+    "badge": false,
+    "noIndex": false,
+    "className": "docs-version-current",
+    "isLast": true,
+    "docsSidebars": {
+      "mainSidebar": [
+        {
+          "type": "link",
+          "href": "/main/main",
+          "label": "Use custom docker images in Truss",
+          "docId": "main",
+          "unlisted": false
+        }
+      ]
+    },
+    "docs": {
+      "main": {
+        "id": "main",
+        "title": "Use custom docker images in Truss",
+        "description": "By default, Truss uses pre-built base images from baseten/truss-server-base",
+        "sidebar": "mainSidebar"
+      }
+    }
+  }
+}

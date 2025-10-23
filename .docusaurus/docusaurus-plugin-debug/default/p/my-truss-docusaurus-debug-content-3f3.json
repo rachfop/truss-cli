@@ -1,0 +1,49 @@
+{
+  "allContent": {
+    "docusaurus-plugin-content-docs": {
+      "default": {
+        "loadedVersions": [
+          {
+            "versionName": "current",
+            "label": "Next",
+            "banner": null,
+            "badge": false,
+            "noIndex": false,
+            "className": "docs-version-current",
+            "path": "/my-truss/",
+            "tagsPath": "/my-truss/tags",
+            "isLast": true,
+            "routePriority": -1,
+            "sidebarFilePath": "/Users/rachfop/my-truss/sidebars.js",
+            "contentPath": "/Users/rachfop/my-truss/docs",
+            "docs": [
+              {
+                "id": "main",
+                "title": "Use custom docker images in Truss",
+                "description": "By default, Truss uses pre-built base images from baseten/truss-server-base",
+                "source": "@site/docs/main.md",
+                "sourceDirName": ".",
+                "slug": "/",
+                "permalink": "/my-truss/",
+                "draft": false,
+                "unlisted": false,
+                "tags": [],
+                "version": "current",
+                "frontMatter": { "id": "main", "title": "Use custom docker images in Truss", "slug": "/" },
+                "sidebar": "mainSidebar"
+              }
+            ],
+            "drafts": [],
+            "sidebars": { "mainSidebar": [{ "type": "doc", "id": "main" }] }
+          }
+        ]
+      }
+    },
+    "docusaurus-plugin-content-pages": { "default": null },
+    "docusaurus-plugin-debug": {},
+    "docusaurus-plugin-svgr": {},
+    "docusaurus-theme-classic": {},
+    "docusaurus-bootstrap-plugin": {},
+    "docusaurus-mdx-fallback-plugin": {}
+  }
+}
