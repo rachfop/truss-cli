@@ -1,0 +1,191 @@
+---
+title: Review of Baseten's Base Docker Images documentation
+sidebar_label: Base Docker image
+description: Run an existing workflow with Baseten
+---
+
+This review evaluates the
+[Baseten Base Docker Images](https://docs.baseten.co/development/model/base-images#base-docker-images)
+documentation, which explains how to run custom Docker images for Truss
+deployments. While following the documented workflow, I identified several areas
+where clarity, completeness, and developer usability could be improved,
+particularly for users new to Baseten or containerized deployment.
+
+## Workflow tested
+
+I followed the official guide for setting up and deploying a custom base Docker
+image, which involved:
+
+- Configuring the `config.yaml` file.
+- Building and pushing Docker images.
+- Deploying to Baseten.
+
+However, the workflow was difficult to follow and lacked sufficient context. For
+example, the documentation states:
+
+> You can build a new base image using Truss's base images as a foundation.
+
+It links to
+[Docker Hub](https://hub.docker.com/r/baseten/truss-server-base/tags), where the
+latest image was updated three months ago — leaving ambiguity about whether
+these images are current, supported, or version-locked.
+
+Additionally, to my knowledge, Baseten doesn't support bringing your own full
+`Dockerfile`. Instead, the system generates one from templates to ensure
+compatibility with Truss infrastructure. For custom build steps, developers can
+use the `build_commands` parameter in `config.yaml`. This distinction should be
+clearly documented, ideally surfaced through contextual hints.
+
+While this document claims to be a guide; it is much disticntly not so. Instead
+it is a loose set of reference configurations.
+
+## Key findings and recommendations
+
+### Title and discoverability
+
+**Issue:** The title _“Base Docker images”_ is too generic and not aligned with
+user search behavior.
+
+**Why it matters:** Developers typically search for action-oriented phrases such
+as “deploy custom Docker image” or “run custom container.” The current title
+obscures the guide's purpose and reduces visibility.
+
+**Recommendation:**
+
+- **Type:** Reference doc title update.
+- **New title:** “Deploy custom Docker images” or “Run custom containers on
+  Baseten”.
+- **Add:** A brief introduction summarizing the benefits of custom images and
+  link to related API docs for cross-navigation.
+
+This document is nested fairly deep into the documentation set and, to my
+knowledge, isn't reference in places where it would make sense.
+
+### Missing alternative implementation paths
+
+**Issue:** The guide focuses solely on the `config.yaml` approach without
+referencing the [Chains SDK](https://docs.baseten.co/reference/sdk/chains)
+alternative (`CustomImage` class).
+
+**Why it matters:** Different developer personas (YAML vs. Chains developers)
+benefit from different approaches. Lack of choice forces context switching.
+
+**Recommendation:**
+
+- **Type:** Conceptual guide addition.
+- **Content:** Add a “Choose your approach” section comparing:
+  - YAML-based configuration.
+  - Chains SDK using `CustomImage`.
+  - Decision criteria for each method.
+
+For example, adding this to the documentation under a tab would be helpful:
+
+```python
+chains.DockerImage(
+    base_image=chains.CustomImage(
+        image="python:3.11-slim-bookworm",
+        python_executable_path="/usr/local/bin/python"
+    )
+)
+```
+
+This snippet would make the guide more approachable for Python developers.
+
+### Incomplete example references
+
+**Issue:** The NVIDIA NeMo example links to external documentation rather than
+providing a full, runnable reference.
+
+**Why it matters:** Developers learn fastest from working examples. Redirecting
+users to external pages breaks flow and learning continuity.
+
+**Recommendation:**
+
+- **Type:** Tutorial enhancement with full code examples.
+- **Content:**
+  - Replace or supplement the NeMo example with a linked GitHub repository that
+    contains the full code example; thus, keeping developers on Baseten's
+    platform.
+  - Highlight the
+    [Whisper chainlet example](https://github.com/basetenlabs/truss/blob/c8597a24010a9f3845aa2f95b15ec2a4d18e888a/truss-chains/examples/audio-transcription/whisper_chainlet.py#L17-L36)
+  - Add inline snippets demonstrating real-world dependency handling (e.g.,
+    `ffmpeg`, `system_packages`).
+
+I would want to keep users on this guide as they came here to learn how to deploy a custom docker image. 
+Linking out to NVIDIA will drop user retetion. 
+
+### Platform-specific build requirements
+
+**Issue:** The guide omits critical platform-specific build instructions —
+notably `--platform linux/amd64` for Apple Silicon users.
+
+**Why it matters:** Without this flag, MacOs users face failed builds and
+confusing errors.
+
+**Recommendation:**
+
+- **Type:** Reference doc update
+- **Content:**
+
+  ```bash
+  # For MacOs users
+  docker build --platform linux/amd64 -t my-custom-base-image:0.1 .
+
+  # For Linux users
+  docker build -t my-custom-base-image:0.1 .
+  ```
+
+  Add a short note on using the `--platform` flag to help developers new to
+  docker understand build compatibility issues.
+
+### Unclear tool boundaries: Docker vs. Truss CLI
+
+**Issue:** The documentation uses raw Docker commands but, the Truss CLI
+contains similar commands.
+
+**Why it matters:** As a developer understanding when to use Docker vs. the
+Truss CLI for the `build` command should be spelt out. There seems to be a lot
+of overlap between the two tools and deciding which tool to use can be
+confusing.
+
+**Recommendation:**
+
+- **Type:** Conceptual clarification
+- **Content:** Add a “Tools overview” section explaining:
+  - When to use Docker directly.
+  - When to use `truss image build`.
+
+**Reference context:** `truss image build` wraps `docker build` and adds
+features such as:
+
+- Selecting the appropriate base image.
+- Injecting build commands.
+- Validating configuration and caching models.
+- Labeling and tracking deployments.
+
+### Missing prerequisites and setup checks
+
+**Issue:** No guidance is provided for verifying local environment readiness
+(e.g., Docker running, correct permissions).
+
+**Recommendation:**
+
+- **Type:** Quick start checklist
+- **Add a section:** “Before you begin” with:
+  - `docker --version` or `truss --version` command.
+
+### Editorial and consistency improvements
+
+**Issue:** Inconsistent capitalization and spacing in titles such as _“Setting a
+base image in`config.yaml`.”_ There is no spacing between the “in” and
+“config.yaml”.
+
+**Recommendation:**
+
+- Ensure consistent **sentence case** across headings.
+- Correct spacing and punctuation in YAML references.
+- Standardize section titles with a step-oriented pattern (e.g., “Step 1: Create
+  a custom base image”). Which is used on
+  [this page](https://docs.baseten.co/development/model/build-commands).
+- Cross-reference `custom_image` in the _Your first model_ guide to improve
+  cohesion across docs.

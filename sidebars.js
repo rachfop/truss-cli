@@ -2,7 +2,7 @@
 const sidebars = {
   mainSidebar: [
     { type: "doc", id: "index" },
-
+    { type: "doc", id: "run-a-workflow" },
   ],
 };
 

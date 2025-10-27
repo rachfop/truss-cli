@@ -4,7 +4,7 @@
   "markdown": {
     "lineWidth": 80,
     "newLineKind": "lf",
-    "textWrap": "maintain",
+    "textWrap": "always",
     "emphasisKind": "underscores",
     "strongKind": "asterisks",
     "ignoreDirective": "dprint-ignore",
@@ -22,7 +22,7 @@
   },
   "includes": [
     "**/*.md",
-    "**/*.mdx"
+    "docs/**/*.mdx"
   ],
   "excludes": [
     "**/*-lock.json"

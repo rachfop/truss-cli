@@ -1,6 +1,7 @@
 # Custom Base Image Example
 
-This directory reproduces the steps from the “Standard Truss” tab in `docs/index.mdx`.
+This directory reproduces the steps from the “Standard Truss” tab in
+`docs/index.mdx`.
 
 ## Usage
 

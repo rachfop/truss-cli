@@ -7,7 +7,10 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "serve": "docusaurus serve",
-    "deploy": "docusaurus deploy"
+    "deploy": "docusaurus deploy",
+    "format": "dprint fmt . --allow-no-files && prettier --write '**/*.md' '**/*.mdx'",
+    "format:md": "dprint fmt docs/**/*.mdx --allow-no-files",
+    "format:prettier": "prettier --write '**/*.md' '**/*.mdx'"
   },
   "dependencies": {
     "@docusaurus/core": "^3.4.0",
@@ -15,11 +18,13 @@
     "@docusaurus/theme-classic": "^3.4.0",
     "@vercel/speed-insights": "^1.2.0",
     "clsx": "^1.2.1",
+    "dprint": "^0.50.2",
     "prism-react-renderer": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "docusaurus-plugin-llms": "^0.2.2"
+    "docusaurus-plugin-llms": "^0.2.2",
+    "prettier": "^3.6.2"
   }
 }
