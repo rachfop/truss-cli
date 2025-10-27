@@ -6,38 +6,42 @@ description: Run an existing workflow with Baseten
 
 This review evaluates the
 [Baseten Base Docker Images](https://docs.baseten.co/development/model/base-images#base-docker-images)
-documentation, which explains how to run custom Docker images for Truss
-deployments. While following the documented workflow, I identified several areas
-where clarity, completeness, and developer usability could be improved,
-particularly for users new to Baseten or containerized deployment.
+documentation, which explains how to run custom Docker images. While following
+the documented workflow, I identified several areas where clarity, completeness,
+and developer usability could be improved.
 
 ## Workflow tested
 
-I followed the official guide for setting up and deploying a custom base Docker
-image, which involved:
+I followed the documented process for setting up and deploying a custom base
+Docker image. This involved:
 
 - Configuring the `config.yaml` file.
 - Building and pushing Docker images.
 - Deploying to Baseten.
 
-However, the workflow was difficult to follow and lacked sufficient context. For
-example, the documentation states:
+While the steps appeared straightforward, the workflow was difficult to follow
+in practice due to missing context and unclear boundaries between the tools
+involved. The documentation provides minimal explanation of how each step
+connects to the overall deployment process, leaving users to infer much of the
+setup themselves. This could be improved greatly by adding full working examples.
 
-> You can build a new base image using Truss's base images as a foundation.
+The section on building base images adds to this confusion. It directs users to
+[Docker Hub](https://hub.docker.com/r/baseten/truss-server-base/tags) to find
+Truss base images, but these were last updated several months ago, raising
+questions about whether they are current or supported. This uncertainty makes it
+difficult to determine which image versions are safe to use as a foundation.
 
-It links to
-[Docker Hub](https://hub.docker.com/r/baseten/truss-server-base/tags), where the
-latest image was updated three months ago — leaving ambiguity about whether
-these images are current, supported, or version-locked.
+In addition, Baseten does not allow developers to supply a full custom
+`Dockerfile`; instead, it automatically generates one to maintain compatibility
+with Truss infrastructure. Customization is limited to the `build_commands`
+parameter in `config.yaml`, but this distinction is not made explicit. Clearer
+documentation on when to use `build_commands` and what Truss handles
+automatically would significantly reduce confusion.
 
-Additionally, to my knowledge, Baseten doesn't support bringing your own full
-`Dockerfile`. Instead, the system generates one from templates to ensure
-compatibility with Truss infrastructure. For custom build steps, developers can
-use the `build_commands` parameter in `config.yaml`. This distinction should be
-clearly documented, ideally surfaced through contextual hints.
-
-While this document claims to be a guide; it is much disticntly not so. Instead
-it is a loose set of reference configurations.
+Although the document is presented as a “guide,” it functions more like a
+reference sheet: listing configuration options without walking users through a
+complete, working example. A more structured, narrative approach would help
+developers understand not just _what_ to do, but _why_ each step matters.
 
 ## Key findings and recommendations
 
@@ -59,16 +63,19 @@ obscures the guide's purpose and reduces visibility.
   link to related API docs for cross-navigation.
 
 This document is nested fairly deep into the documentation set and, to my
-knowledge, isn't reference in places where it would make sense.
+knowledge, isn't referenced in places where it would make sense.
 
 ### Missing alternative implementation paths
 
 **Issue:** The guide focuses solely on the `config.yaml` approach without
 referencing the [Chains SDK](https://docs.baseten.co/reference/sdk/chains)
-alternative (`CustomImage` class).
+alternative
+[`CustomImage`](https://docs.baseten.co/reference/sdk/chains#class-truss-chains-customimage)
+class.
 
 **Why it matters:** Different developer personas (YAML vs. Chains developers)
-benefit from different approaches. Lack of choice forces context switching.
+benefit from different approaches. This page should show both options and
+provide guidance on when to use each.
 
 **Recommendation:**
 
@@ -91,7 +98,7 @@ chains.DockerImage(
 
 This snippet would make the guide more approachable for Python developers.
 
-### Incomplete example references
+### Example references
 
 **Issue:** The NVIDIA NeMo example links to external documentation rather than
 providing a full, runnable reference.
@@ -111,15 +118,15 @@ users to external pages breaks flow and learning continuity.
   - Add inline snippets demonstrating real-world dependency handling (e.g.,
     `ffmpeg`, `system_packages`).
 
-I would want to keep users on this guide as they came here to learn how to deploy a custom docker image. 
-Linking out to NVIDIA will drop user retetion. 
+I would want to keep users on this guide as they came here to learn how to
+deploy a custom Docker image. Linking out to NVIDIA drops user retention.
 
 ### Platform-specific build requirements
 
-**Issue:** The guide omits critical platform-specific build instructions —
-notably `--platform linux/amd64` for Apple Silicon users.
+**Issue:** The guide omits critical platform-specific build instructions:
+notably `--platform linux/amd64` for macOS users.
 
-**Why it matters:** Without this flag, MacOs users face failed builds and
+**Why it matters:** Without this flag, macOS users face failed builds and
 confusing errors.
 
 **Recommendation:**
@@ -128,7 +135,7 @@ confusing errors.
 - **Content:**
 
   ```bash
-  # For MacOs users
+  # For macOS users
   docker build --platform linux/amd64 -t my-custom-base-image:0.1 .
 
   # For Linux users
@@ -143,8 +150,8 @@ confusing errors.
 **Issue:** The documentation uses raw Docker commands but, the Truss CLI
 contains similar commands.
 
-**Why it matters:** As a developer understanding when to use Docker vs. the
-Truss CLI for the `build` command should be spelt out. There seems to be a lot
+**Why it matters:** As a developer, understanding when to use Docker vs. the
+Truss CLI for the `build` command should be spelled out. There seems to be a lot
 of overlap between the two tools and deciding which tool to use can be
 confusing.
 

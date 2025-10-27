@@ -8,9 +8,8 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "deploy": "docusaurus deploy",
-    "format": "dprint fmt . --allow-no-files && prettier --write '**/*.md' '**/*.mdx'",
-    "format:md": "dprint fmt docs/**/*.mdx --allow-no-files",
-    "format:prettier": "prettier --write '**/*.md' '**/*.mdx'"
+    "format": "dprint fmt . --allow-no-files",
+    "format:md": "dprint fmt docs/**/*.mdx --allow-no-files"
   },
   "dependencies": {
     "@docusaurus/core": "^3.4.0",
